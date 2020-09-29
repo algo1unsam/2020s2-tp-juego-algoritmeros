@@ -6,10 +6,11 @@ program prueba {
 	//game.cellSize(5)
 	game.height(20)
 	game.width(20)
-	game.addVisualCharacter(nave)
-	//keyboard.w().onPressDo({ nave.position()=new Position(x = nave.position().x() + 1, y = nave.position().y())})
-	//keyboard.a().onPressDo({ hector.sembrar(new Maiz(position = hector.position())) })
-	//keyboard.s().onPressDo({ hector.sembrar(new Maiz(position = hector.position())) })
-	//keyboard.d().onPressDo({ hector.sembrar(new Maiz(position = hector.position())) })
+	game.addVisual(nave)
+	keyboard.w().onPressDo({ nave.movimiento("arriba") })
+	keyboard.s().onPressDo({ nave.movimiento("abajo") })
+	keyboard.a().onPressDo({ nave.movimiento("izq") })
+	keyboard.d().onPressDo({ nave.movimiento("der") })
+	
 	game.start()
 }
