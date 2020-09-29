@@ -7,10 +7,11 @@ program prueba {
 	game.height(20)
 	game.width(20)
 	game.addVisual(nave)
-	keyboard.w().onPressDo({ nave.movimiento("arriba") })
-	keyboard.s().onPressDo({ nave.movimiento("abajo") })
-	keyboard.a().onPressDo({ nave.movimiento("izq") })
-	keyboard.d().onPressDo({ nave.movimiento("der") })
+	game.onTick(200, "mover", { nave.mover()})
+	keyboard.w().onPressDo({ nave.movimiento(arriba) })
+	keyboard.s().onPressDo({ nave.movimiento(abajo) })
+	keyboard.a().onPressDo({ nave.movimiento(izq) })
+	keyboard.d().onPressDo({ nave.movimiento(der) })
 	
 	game.start()
 }
