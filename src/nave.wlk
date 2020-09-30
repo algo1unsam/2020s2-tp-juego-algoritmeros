@@ -2,7 +2,7 @@ import wollok.game.*
 
 object nave {
 
-	const property image = "nave.png"
+	const property image = "scout.png"
 	var property position = new Position(x = 3, y = 3)
 	var direccion = quieto
 
@@ -11,7 +11,21 @@ object nave {
 	}
 
 	method mover() {
-		position = direccion.position()
+		if (self.position().y() == 14) {
+			direccion = quieto
+			position = position.down(1)
+		} else if (self.position().y() == 0) {
+			direccion = quieto
+			position = position.up(1)
+		} else if (self.position().x() == 0) {
+			direccion = quieto
+			position = position.right(1)
+		} else if (self.position().x() == 15) {
+			direccion = quieto
+			position = position.left(1)
+		} else {
+			position = direccion.position()
+		}
 	}
 
 }
