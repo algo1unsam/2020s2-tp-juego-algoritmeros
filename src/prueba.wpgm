@@ -1,19 +1,22 @@
 import wollok.game.*
-import nave.*
-
+import jugador.*
+import enemigos.*
 program prueba {
 	game.title("prueba")
-	//game.cellSize(5)
-	game.height(15)
-	game.width(20)
+	//game.cellSize(20)
+	game.height(10)
+	game.width(15)
 	game.boardGround("fondo.png")
-	game.addVisual(nave)
-	game.onTick(200, "mover", { nave.mover()})
-	keyboard.w().onPressDo({ nave.movimiento(arriba) })
-	keyboard.s().onPressDo({ nave.movimiento(abajo) })
-	keyboard.a().onPressDo({ nave.movimiento(izq) })
-	keyboard.d().onPressDo({ nave.movimiento(der) })
-	keyboard.space().onPressDo({ nave.movimiento(quieto)})
-	
+	game.addVisual(jugador)
+	game.addVisual(enemigo)
+	game.addVisual(enemigo2)
+	game.onTick(150, "mover", { jugador.mover()})
+	game.onTick(300, "mover", { enemigo.mover()})
+	game.onTick(300, "mover", { enemigo2.mover()})
+	keyboard.w().onPressDo({ jugador.movimiento(arriba) })
+	keyboard.s().onPressDo({ jugador.movimiento(abajo) })
+	keyboard.a().onPressDo({ jugador.movimiento(izq) })
+	keyboard.d().onPressDo({ jugador.movimiento(der) })
+	keyboard.space().onPressDo({ jugador.movimiento(quieto)})
 	game.start()
 }
