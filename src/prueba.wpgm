@@ -2,21 +2,25 @@ import wollok.game.*
 import jugador.*
 import enemigos.*
 program prueba {
+	var enem=new Enemigo()
 	game.title("prueba")
 	//game.cellSize(20)
 	game.height(10)
 	game.width(15)
 	game.boardGround("fondo.png")
 	game.addVisual(jugador)
-	game.addVisual(enemigo)
-	game.addVisual(enemigo2)
+	//game.addVisual(enem)
+	//game.addVisual(enemigo2)
 	game.onTick(150, "mover", { jugador.mover()})
-	game.onTick(300, "mover", { enemigo.mover()})
-	game.onTick(300, "mover", { enemigo2.mover()})
+	//game.onTick(enem.tiempoBase(), "moverEnemigo1", { enem.mover()})
+	//game.onTick(300, "moverEnemigo2", { enemigo2.mover()})
 	keyboard.w().onPressDo({ jugador.movimiento(arriba) })
 	keyboard.s().onPressDo({ jugador.movimiento(abajo) })
 	keyboard.a().onPressDo({ jugador.movimiento(izq) })
 	keyboard.d().onPressDo({ jugador.movimiento(der) })
 	keyboard.space().onPressDo({ jugador.movimiento(quieto)})
+	//probando crear enemigos-Por teclado
+	keyboard.r().onPressDo({game.addVisual(enem)})
+	keyboard.r().onPressDo({game.onTick(enem.tiempoBase(), "moverEnemigo1", { enem.mover()})})
 	game.start()
 }

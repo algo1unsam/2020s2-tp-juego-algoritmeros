@@ -5,21 +5,23 @@ object jugador {
 	const property image = "scout.png"
 	var property position = new Position(x = 3, y = 3)
 	var direccion = quieto
-	var dirAnterior = null
+	//var dirAnterior = null
 
 	method movimiento(direccionModificar) {
+		
 		direccion = direccionModificar
-			// probando detener al personaje al tocar otra tecla
-		if (direccion != dirAnterior and dirAnterior != null) {
-			direccion = quieto
-			dirAnterior = null
-		} else {
-			dirAnterior = direccion
-		}
+	// probando detener al personaje al tocar otra tecla
+	//if (direccion != dirAnterior and dirAnterior != null) {
+	 //game.removeTickEvent("mover")
+	 //dirAnterior = null
+	 //} else {
+	 //dirAnterior=direccion
+	 //}
 	}
 
 	method mover() {
-		//cambie la logica para que use el alto y ancho del juego
+		// cambie la logica para que use el alto y ancho del juego
+		
 		if (self.position().y() == game.height() - 1) {
 			direccion = quieto
 			position = position.down(1)
