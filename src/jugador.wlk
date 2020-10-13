@@ -3,6 +3,7 @@ import wollok.game.*
 object jugador {
 
 	const property image = "scout.png"
+	var property vida = 100
 	var property position = new Position(x = 3, y = 3)
 	var direccion = quieto
 	//var dirAnterior = null
@@ -38,7 +39,9 @@ object jugador {
 			position = direccion.position()
 		}
 	}
-
+	method danioVida(danio){
+		vida=vida - danio
+	}
 }
 
 object abajo {
