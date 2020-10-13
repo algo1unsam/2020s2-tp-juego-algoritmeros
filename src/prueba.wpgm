@@ -3,28 +3,19 @@ import jugador.*
 import enemigos.*
 
 program prueba {
-	var enem = new Enemigo(dmg = 15)
-	var elefante = new Enemigo(tiempoBase = 700, image = "elefante.png", dmg = 10)
 	game.title("prueba")
-		// game.cellSize(20)
 	game.height(10)
 	game.width(15)
 	game.boardGround("calle.png")
 	game.addVisual(jugador)
-		// game.addVisual(enem)
-		// game.addVisual(enemigo2)
 	game.onTick(150, "mover", { jugador.mover() })
-		// game.onTick(enem.tiempoBase(), "moverEnemigo1", { enem.mover()})
-		// game.onTick(300, "moverEnemigo2", { enemigo2.mover()})
 	keyboard.w().onPressDo({ jugador.movimiento(arriba) })
 	keyboard.s().onPressDo({ jugador.movimiento(abajo) })
 	keyboard.a().onPressDo({ jugador.movimiento(izq) })
 	keyboard.d().onPressDo({ jugador.movimiento(der) })
 	keyboard.space().onPressDo({ jugador.movimiento(quieto) })
-		// probando crear enemigos-Por teclado
-	keyboard.r().onPressDo({ game.addVisual(enem) })
-	keyboard.r().onPressDo({ game.onTick(enem.tiempoBase(), "moverEnemigo1", { enem.mover()}) })
-	keyboard.r().onPressDo({ game.addVisual(elefante) })
-	keyboard.r().onPressDo({ game.onTick(elefante.tiempoBase(), "moverEnemigo1", { elefante.mover()}) })
+	keyboard.r().onPressDo({ creadorEnemigos.crear() })
+	game.onCollideDo(jugador, { enem => jugador.danioVida(enem.danio()) })
+	keyboard.g().onPressDo({ game.say(jugador, jugador.vida().toString()) })
 	game.start()
 }

@@ -2,14 +2,13 @@ import wollok.game.*
 
 object jugador {
 
-	//const property image = if (armor) "scout.png" else "scout.png"
+	// const property image = if (armor) "scout.png" else "scout.png"
 	const property image = "scout.png"
+	var property vida = 100
 	var property position = new Position(x = 3, y = 3)
 	var direccion = quieto
 	// agregue la var armadura. La idea es que dependiendo de la armadura que tenga el personaje se pueda aguantar X cantidad de golpes sin que le baje la vida
 	var armor = false
-	var property vida = 100
-	// var dirAnterior = null
 
 	method movimiento(direccionModificar) {
 		direccion = direccionModificar
@@ -32,6 +31,10 @@ object jugador {
 		} else {
 			position = direccion.position()
 		}
+	}
+
+	method danioVida(danio) {
+		vida = vida - danio
 	}
 
 }
