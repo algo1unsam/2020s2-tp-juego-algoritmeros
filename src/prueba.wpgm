@@ -3,11 +3,16 @@ import jugador.*
 import enemigos.*
 
 program prueba {
+	//TODO: cambiar los metodos de los enemigos y objetos para hacer un collide solo
+	//arreglar el elefante
+	//agregar mas extras
+	// No se si es mi computadora pero despues de un rato el juego parece que corre lento
 	game.title("prueba")
 	game.height(10)
 	game.width(15)
 	game.boardGround("calle.png")
 	game.addVisual(jugador)
+		// game.addVisualIn(jugador.vida(),game.at(3,2)) Agregar la vida y armadura a la pantalla
 	game.onTick(150, "mover", { jugador.mover() })
 	keyboard.w().onPressDo({ jugador.movimiento(arriba) })
 	keyboard.s().onPressDo({ jugador.movimiento(abajo) })
@@ -16,6 +21,10 @@ program prueba {
 	keyboard.space().onPressDo({ jugador.movimiento(quieto) })
 	keyboard.r().onPressDo({ creadorEnemigos.crear() })
 	game.onCollideDo(jugador, { enem => jugador.danioVida(enem.danio()) })
-	keyboard.g().onPressDo({ game.say(jugador, jugador.vida().toString()) })
+		// Para saber el estado del jugador
+	keyboard.q().onPressDo({ jugador.estado() })
+	game.onTick(1000, "ex", { extra.crearExtra() })
+		// Hay dos collide. Talvez despues hacer que sea uno solo
+	game.onCollideDo(jugador, { ex => jugador.agarrar(ex) })
 	game.start()
 }
