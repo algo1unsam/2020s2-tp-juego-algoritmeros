@@ -5,9 +5,9 @@ class Enemigo {
 
 	var vueltas = 0
 	const vueltasLimites = 3.randomUpTo(5).roundUp()
-	const property tiempoBase = 500
+	const property tiempoBase
 	var tiempoCambia = tiempoBase
-	const property image = "tigre.png"
+	const property image
 	var property danio
 	var property position = new Position(x = game.width() - 1, y = 0.randomUpTo(game.height() - 1))
 
@@ -34,7 +34,11 @@ class Enemigo {
 
 object creadorEnemigos {
 
-	const enem = [ new Enemigo(danio = 5), new Enemigo(danio = 10, image="elefante.png", tiempoBase = 700) ]
+	const enem = [ 
+		new Enemigo(danio = 5, image="tigre.png", tiempoBase=500), 
+		new Enemigo(danio = 10, image="elefante.png", tiempoBase = 700)//, 
+		//new Enemigo(danio=15, image="gorila.png", tiempoBase = 600)
+	]
 
 	method crear() {
 		enem.forEach({ x => game.addVisual(x)})
@@ -43,3 +47,4 @@ object creadorEnemigos {
 
 }
 
+ //Error null does not understand >
