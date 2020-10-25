@@ -3,19 +3,46 @@ import jugador.*
 import enemigos.*
 
 program prueba {
+	//TODO: cambiar los metodos de los enemigos y objetos para hacer un collide solo
+	//agregar mas extras y enemigos
+	//game.cellSize(50) El tamaño default de las celdas es de 50px
+	
+	// VISUALES
 	game.title("prueba")
 	game.height(10)
 	game.width(15)
+	//game.addVisual(fondo1) INTENTE PONER PANTALLAS ANTES DEL JUEGO PERO NO ME SALIÓ, ESTÁN LAS IMÁGENES EN ASSETS POR SI LAS QUERES VER
 	game.boardGround("calle.png")
 	game.addVisual(jugador)
+	//game.addVisualIn(jugador.vida(),game.at(3,2)) Agregar la vida y armadura a la pantalla
+	
+	// MOVIMIENTO JUGADOR
 	game.onTick(150, "mover", { jugador.mover() })
+	
+	// CONTROLES
+	
 	keyboard.w().onPressDo({ jugador.movimiento(arriba) })
 	keyboard.s().onPressDo({ jugador.movimiento(abajo) })
 	keyboard.a().onPressDo({ jugador.movimiento(izq) })
 	keyboard.d().onPressDo({ jugador.movimiento(der) })
 	keyboard.space().onPressDo({ jugador.movimiento(quieto) })
 	keyboard.r().onPressDo({ creadorEnemigos.crear() })
+	
+	// PARA SABER EL ESTADO DEL JUGADOR
+	keyboard.q().onPressDo({ jugador.estado() })
+	
+	
+	// EXTRAS
+	// PARA LOS EXTRAS CONVIENE DEJAR TICKS DISTINTOS
+	game.onTick(1000, "armadura", { extra.crearExtra()})
+	game.onTick(1000, "curar", { vida.crearExtra() })
+	
+	// COLLIDES
+	// USE UN COLLIDE SOLO Y ANDA EXACTAMENTE IGUAL QUE SI USARA UNO PARA CADA UNO
+	game.onCollideDo(jugador, { ex => jugador.agarrar(ex) })
 	game.onCollideDo(jugador, { enem => jugador.danioVida(enem.danio()) })
-	keyboard.g().onPressDo({ game.say(jugador, jugador.vida().toString()) })
+		//game.onCollideDo(jugador, { vi => jugador.agarrar(vi)})
 	game.start()
 }
+
+//CAMBIAR LO DEL COLLIDE QUE SE HACE DAÑO CON UN FLAG, PARA QUE HAGA EL DAÑO UNA VEZ SOLA
