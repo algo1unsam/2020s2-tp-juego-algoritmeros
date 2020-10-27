@@ -1,15 +1,16 @@
 import wollok.game.*
+import enemigos.*
 
 object jugador {
 
 	var property image = "scout.png"
-	var property vida = 10
+	var property vidaJugador = 10
 	var property position = new Position(x = 3, y = 3)
 	var direccion = quieto
 	var property armor = false
 	var property armadura = 0
-	var danioTotal
 
+	// var danioTotal
 	method movimiento(direccionModificar) {
 		direccion = direccionModificar
 	}
@@ -36,8 +37,8 @@ object jugador {
 	method danioVida(danio) {
 		if (danio != 0) {
 			if (armor) {
-				//danioTotal = (danio / 2).roundUp()
-				//vida -= danioTotal
+				// danioTotal = (danio / 2).roundUp()
+				// vida -= danioTotal
 				armadura -= danio
 				if (armadura <= 0) {
 					armor = false
@@ -45,14 +46,14 @@ object jugador {
 					self.image("scout.png")
 				}
 			} else {
-				vida -= danio
+				vidaJugador -= danio
 			}
 		}
 		self.estado()
 	}
 
-	method agarrar(extra) {
-		extra.efecto()
+	method agarrarObjeto(ex) {
+		ex.efecto()
 	}
 
 	method agarrarArm() {
@@ -63,9 +64,9 @@ object jugador {
 
 	method estado() {
 		if (!gameOver.perdio() and armor) {
-			game.say(self, "Tengo " + self.vida().toString() + " de vida restante y " + self.armadura().toString() + " de armadura")
+			game.say(self, "Tengo " + self.vidaJugador().toString() + " de vida restante y " + self.armadura().toString() + " de armadura")
 		} else if (!gameOver.perdio()) {
-			game.say(self, "Tengo " + self.vida().toString() + " de vida restante")
+			game.say(self, "Tengo " + self.vidaJugador().toString() + " de vida restante")
 		} else {
 			perdiste.finJuego()
 		}
@@ -106,8 +107,14 @@ object quieto {
 object perdiste {
 
 	method finJuego() {
-		game.clear()
+		creadorEnemigos.perder()
+		vida.perder()
+		extra.perder()
+		jugador.movimiento(quieto)
+		game.removeVisual(jugador)
+		game.removeTickEvent("mover")
 		game.addVisual(gameOver)
+	// game.sound("gameOver.mp3").play()
 	}
 
 }
@@ -117,17 +124,22 @@ object gameOver {
 	var property image = "gameOver.png"
 	var property position = new Position(x = 0, y = 0)
 
-	method perdio() = jugador.vida() <= 0
+	method perdio() = jugador.vidaJugador() <= 0
+
+}
+
+object primera {
+
+	var property image = "primera.png"
+	var property position = new Position(x = 0, y = 0)
 
 }
 
 //object fondo1 {
-	//var property image = "primera.png"
-	//var property position = new Position(x = 0, y = 0)
+// var property image = "primera.png"
+// var property position = new Position(x = 0, y = 0)
 //}
-
 //object fondo2 {
-	//var property image = "segunda.png"
-	//var property position = new Position(x = 0, y = 0)
+// var property image = "segunda.png"
+// var property position = new Position(x = 0, y = 0)
 //}
-

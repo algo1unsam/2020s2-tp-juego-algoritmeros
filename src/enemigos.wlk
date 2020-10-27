@@ -89,6 +89,37 @@ class Elefante inherits Enemigo {
 
 }
 
+class Gorila inherits Enemigo {
+
+	const property image = "gorila.png"
+	var vueltas = 0
+	const vueltasLimites = 3.randomUpTo(5).roundUp()
+	var tiempoCambia = tiempoBase
+
+	override method danio() {
+		return danio * 2
+	}
+
+	// el gorila vuelve a aparecer en la fila donde desta el jugador
+	override method mover() {
+		if (self.position().x() != 0) {
+			position = position.left(1)
+		} else {
+			position = new Position(x = game.width() - 1, y = jugador.position().y())
+			vueltas += 1
+			if (vueltas >= vueltasLimites) {
+				if (tiempoCambia > 300) {
+					tiempoCambia = tiempoCambia - 100
+					game.removeTickEvent("moverGorila")
+					game.onTick(tiempoCambia, "moverGorila", { self.mover()})
+				}
+				vueltas = 0
+			}
+		}
+	}
+
+}
+
 //object creadorEnemigos {
 // const property enem = [ new Tigre(), new Elefante(tiempoBase = 800) ]
 // method crear() {
@@ -101,12 +132,27 @@ object creadorEnemigos {
 
 	const tigre = new Tigre()
 	const elefante = new Elefante(tiempoBase = 800)
+	const gorila = new Gorila(tiempoBase = 600)
 
 	method crear() {
 		game.addVisual(tigre)
 		game.addVisual(elefante)
+		game.addVisual(gorila)
 		game.onTick(tigre.tiempoBase(), "moverTigre", { tigre.mover()})
 		game.onTick(elefante.tiempoBase(), "moverElefante", { elefante.mover()})
+		game.onTick(gorila.tiempoBase(), "moverGorila", { gorila.mover()})
+	}
+
+	method perder() {
+		game.removeVisual(tigre)
+		game.removeVisual(elefante)
+		game.removeVisual(gorila)
+		game.removeTickEvent("moverTigre")
+		game.removeTickEvent("moverElefante")
+		game.removeTickEvent("moverGorila")
+		tigre.position(new Position(x = game.width() - 1, y = 0.randomUpTo(game.height() - 1)))
+		elefante.position(new Position(x = game.width() - 1, y = 0.randomUpTo(game.height() - 1)))
+		gorila.position(new Position(x = game.width() - 1, y = 0.randomUpTo(game.height() - 1)))
 	}
 
 }
@@ -144,6 +190,10 @@ object extra {
 		return 0
 	}
 
+	method perder() {
+		game.removeVisual(self)
+	}
+
 }
 
 object vida {
@@ -166,9 +216,9 @@ object vida {
 	}
 
 	method efecto() {
-		jugador.vida(jugador.vida() + 10)
-		if (jugador.vida() > 100) {
-			jugador.vida(100)
+		jugador.vidaJugador(jugador.vidaJugador() + 10)
+		if (jugador.vidaJugador() > 100) {
+			jugador.vidaJugador(100)
 			game.say(jugador, "Tengo la vida máxima")
 		} else {
 			game.say(jugador, "Vida recuperada")
@@ -179,6 +229,10 @@ object vida {
 
 	method danio() {
 		return 0
+	}
+
+	method perder() {
+		game.removeVisual(self)
 	}
 
 }
