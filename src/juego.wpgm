@@ -6,6 +6,18 @@ program prueba {
 	// TODO: cambiar los metodos de los enemigos y objetos para hacer un collide solo
 	// agregar mas extras y enemigos
 	// game.cellSize(50) El tamaño default de las celdas es de 50px
+	
+	//NOTAS DE PROFESOR
+	//crear metodos que sean mas directos
+	//crear una superclase a los extras
+	//sacar metodos a los enemigos y crearlos en la superclase
+	//hacer lo mismo con este y el jugador
+	//agregar un efecto cuando los enemigos chocan con el jugador
+	//PROBLEMA
+	//el jugador aparece en la pantalla de inicio debido a la linea 26,si lo saco no funciona el juego
+	//NOTA
+	//hay una advertencia en jugador y enemigos - Fatal type system error: Unhandled parameter types: [null]
+	//no se que sea pero no parece afectar nada
 	// VISUALES
 	game.title("prueba")
 	game.height(10)
@@ -26,12 +38,12 @@ program prueba {
 			jugador.position(new Position(x = 3, y = 3))
 			jugador.movimiento(quieto)
 			jugador.vidaJugador(10)
-			jugador.movimiento(quieto)
 		} else {
+			
 			creadorEnemigos.crear()
 				// EXTRAS
-			game.onTick(1000, "armadura", { extra.crearExtra()})
-			game.onTick(1000, "curar", { vida.crearExtra()})
+			game.onTick(armadura.tiempoEvento(), armadura.nombreEvento(), { armadura.crearExtra()})
+			game.onTick(vida.tiempoEvento(), vida.nombreEvento(), { vida.crearExtra()})
 				// CONTROLES
 				// MOVIMIENTO JUGADOR
 			game.onTick(150, "mover", { jugador.mover()})
@@ -42,6 +54,7 @@ program prueba {
 			keyboard.space().onPressDo({ jugador.movimiento(quieto)})
 				// PARA SABER EL ESTADO DEL JUGADOR
 			keyboard.q().onPressDo({ jugador.estado()})
+			
 		}
 	})
 		// keyboard.r().onPressDo({ creadorEnemigos.crear() })
@@ -51,7 +64,7 @@ program prueba {
 		// COLLIDES
 		// USE UN COLLIDE SOLO Y ANDA EXACTAMENTE IGUAL QUE SI USARA UNO PARA CADA UNO
 	game.onCollideDo(jugador, { ex => jugador.agarrarObjeto(ex) })
-	game.onCollideDo(jugador, { enem => jugador.danioVida(enem.danio()) })
+	game.onCollideDo(jugador, { enem => jugador.danioVida(enem.danio(),enem) })
 		// game.onCollideDo(jugador, { vi => jugador.agarrar(vi)})
 	game.start()
 }

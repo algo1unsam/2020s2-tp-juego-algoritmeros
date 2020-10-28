@@ -1,221 +1,230 @@
 import wollok.game.*
 import jugador.*
 
-class Enemigo {
+class ObjetoDeJuego {
 
-	var property position = new Position(x = game.width() - 1, y = 0.randomUpTo(game.height() - 1))
+//Los metodos abstractos entre las dos clases
+	method efecto()
+
+	method perder()
+
+	method danio()
+
+	method nombreEvento()
+
+	method tiempoEvento()
+
+}
+
+class Enemigo inherits ObjetoDeJuego {
+
+	var property position = self.dondeAparece()
 	var property danio = 5
-	var property tiempoBase = 500
+	var property vueltas = 0
+	const vueltasLimites = 3.randomUpTo(5).roundUp()
+	var property tiempoCambio = self.tiempoEvento()
+
+	override method efecto() {
+	}
+
+	method dondeAparece() {
+		return new Position(x = game.width() - 1, y = 0.randomUpTo(game.height() - 1))
+	}
+
+	method crear() {
+		game.addVisual(self)
+		game.onTick(self.tiempoEvento(), self.nombreEvento(), { self.mover()})
+	}
 
 	method mover() {
+		self.llegarAlFin()
+	}
+
+	method llegarAlFin() {
 		if (self.position().x() != 0) {
 			position = position.left(1)
 		} else {
-			// hacer que de vueltas
-			position = new Position(x = game.width() - 1, y = 0.randomUpTo(game.height() - 1))
+			self.darVuelta()
 		}
 	}
 
-	// necesario debido a que los objetos extras tienen estos metodos
-	method efecto() {
+	method pasaElLimite() {
+		if (vueltas >= vueltasLimites) {
+			if (tiempoCambio > 200) {
+				tiempoCambio = tiempoCambio - 100
+				game.removeTickEvent(self.nombreEvento())
+				game.onTick(tiempoCambio, self.nombreEvento(), { self.mover()})
+			}
+			vueltas = 0
+		}
 	}
 
-	method agarrar() {
+	method darVuelta() {
+		// hacer que de una vuelta y que pasando vueltasLimites se mueva mas rapido
+		position = self.dondeAparece()
+		vueltas += 1
+		self.pasaElLimite()
+	}
+
+	override method perder() {
+		if (game.hasVisual(self)) {
+			game.removeVisual(self)
+		}
+		game.removeTickEvent(self.nombreEvento())
+		self.position(self.dondeAparece())
+	}
+
+	method colision() {
+		game.removeVisual(self)
+		game.removeTickEvent(self.nombreEvento())
+		position = self.dondeAparece()
+		self.crear()
 	}
 
 }
 
+//el tigre es mas rapido
 class Tigre inherits Enemigo {
 
 	const property image = "tigre.png"
-	var vueltas = 0
-	const vueltasLimites = 3.randomUpTo(5).roundUp()
-	var tiempoCambia = tiempoBase
 
-	override method mover() {
-		if (self.position().x() != 0) {
-			position = position.left(1)
-		} else {
-			// hacer que de una vuelta y que con cada vuelta se mueva mas rapido
-			position = new Position(x = game.width() - 1, y = 0.randomUpTo(game.height() - 1))
-			vueltas += 1
-			if (vueltas >= vueltasLimites) {
-				if (tiempoCambia > 200) {
-					tiempoCambia = tiempoCambia - 100
-					game.removeTickEvent("moverTigre")
-					game.onTick(tiempoCambia, "moverTigre", { self.mover()})
-				// creadorEnemigos.enem().forEach{ x => game.onTick(tiempoCambia, "moverEnemigo1", { x.mover()})}
-				}
-				vueltas = 0
-			}
-		}
-	}
+	override method nombreEvento() = "moverTigre"
+
+	override method tiempoEvento() = 500
 
 }
 
-//PROBLEMA :El elefante se detiene despues de un rato
+// si el jugador tiene armadura la destruye
 class Elefante inherits Enemigo {
 
 	const property image = "elefante.png"
-	var vueltas = 0
-	const vueltasLimites = 3.randomUpTo(5).roundUp()
-	var tiempoCambia = tiempoBase
 
-	// si tiene armadura la destruye
+	override method nombreEvento() = "moverElefante"
+
+	override method tiempoEvento() = 800
+
 	override method danio() {
 		if (jugador.armor()) {
-			return jugador.armadura()
+			return jugador.armaduraCantidad()
 		} else {
 			return danio * 4
 		}
 	}
 
-	override method mover() {
-		if (self.position().x() != 0) {
-			position = position.left(1)
-		} else {
-			position = new Position(x = game.width() - 1, y = 0.randomUpTo(game.height() - 1))
-			vueltas += 1
-			if (vueltas >= vueltasLimites) {
-				if (tiempoCambia > 300) {
-					tiempoCambia = tiempoCambia - 100
-					game.removeTickEvent("moverElefante")
-					game.onTick(tiempoCambia, "moverElefante", { self.mover()})
-				}
-				vueltas = 0
-			}
-		}
-	}
-
 }
 
+// el gorila vuelve a aparecer en la fila donde esta el jugador
 class Gorila inherits Enemigo {
 
 	const property image = "gorila.png"
-	var vueltas = 0
-	const vueltasLimites = 3.randomUpTo(5).roundUp()
-	var tiempoCambia = tiempoBase
+
+	override method nombreEvento() = "moverGorila"
+
+	override method tiempoEvento() = 600
 
 	override method danio() {
 		return danio * 2
 	}
 
-	// el gorila vuelve a aparecer en la fila donde desta el jugador
-	override method mover() {
-		if (self.position().x() != 0) {
-			position = position.left(1)
-		} else {
-			position = new Position(x = game.width() - 1, y = jugador.position().y())
-			vueltas += 1
-			if (vueltas >= vueltasLimites) {
-				if (tiempoCambia > 300) {
-					tiempoCambia = tiempoCambia - 100
-					game.removeTickEvent("moverGorila")
-					game.onTick(tiempoCambia, "moverGorila", { self.mover()})
-				}
-				vueltas = 0
-			}
-		}
+	override method dondeAparece() {
+		return new Position(x = game.width() - 1, y = jugador.position().y())
 	}
 
 }
 
-//object creadorEnemigos {
-// const property enem = [ new Tigre(), new Elefante(tiempoBase = 800) ]
-// method crear() {
-// enem.forEach({ x => game.addVisual(x); game.onTick(x.tiempoBase(), "moverEnemigo1", { x.mover()})})
-// enem.forEach{ x => game.onTick(x.tiempoBase(), "moverEnemigo1", { x.mover()})}
-// }
-//}
-// CAMBIE EL CREADOR DE ENEMIGOS A ALGO FIJO PARA USAR LOS DISTINTOS TICKS
 object creadorEnemigos {
 
 	const tigre = new Tigre()
-	const elefante = new Elefante(tiempoBase = 800)
-	const gorila = new Gorila(tiempoBase = 600)
+	const elefante = new Elefante()
+	const gorila = new Gorila()
+	const coleccionDeEnemigos = [ tigre, elefante, gorila ]
 
 	method crear() {
-		game.addVisual(tigre)
-		game.addVisual(elefante)
-		game.addVisual(gorila)
-		game.onTick(tigre.tiempoBase(), "moverTigre", { tigre.mover()})
-		game.onTick(elefante.tiempoBase(), "moverElefante", { elefante.mover()})
-		game.onTick(gorila.tiempoBase(), "moverGorila", { gorila.mover()})
+		coleccionDeEnemigos.forEach({ e => e.crear()})
 	}
 
 	method perder() {
-		game.removeVisual(tigre)
-		game.removeVisual(elefante)
-		game.removeVisual(gorila)
-		game.removeTickEvent("moverTigre")
-		game.removeTickEvent("moverElefante")
-		game.removeTickEvent("moverGorila")
-		tigre.position(new Position(x = game.width() - 1, y = 0.randomUpTo(game.height() - 1)))
-		elefante.position(new Position(x = game.width() - 1, y = 0.randomUpTo(game.height() - 1)))
-		gorila.position(new Position(x = game.width() - 1, y = 0.randomUpTo(game.height() - 1)))
+		coleccionDeEnemigos.forEach({ e => e.perder()})
 	}
 
 }
 
 //Objetos Extras
-//Probable que necesite cambiar a clase
 //Talvez mas objetos: algo que recupere vida y otro que de puntos
-object extra {
+class Extra inherits ObjetoDeJuego {
 
-	const property image = "armor.png"
 	var creado = false
 	var property position
 
+	override method danio() = 0
+
 	method crearExtra() {
 		if (!creado) {
-			position = new Position(x = 3.randomUpTo(game.width() - (game.width() / 3) - 2), y = 3.randomUpTo(game.height() - 3))
-			if (self.position() != jugador.position() and self.position() != vida.position()) {
-				game.addVisual(self)
-				creado = true
-			}
+			position = self.posicion()
+			game.addVisual(self)
+			creado = true
 		} else {
-			game.removeTickEvent("armadura")
+			game.removeTickEvent(self.nombreEvento())
 			creado = false
 		}
 	}
 
-	method efecto() {
-		game.say(jugador, "Armadura")
-		game.removeVisual(self)
-		game.onTick(1000, "armadura", { self.crearExtra()})
-		jugador.agarrarArm()
+	method posicion() {
+		return self.lugarEnPantalla()
 	}
 
-	method danio() {
-		return 0
+	method lugarEnPantalla() {
+		return new Position(x = 3.randomUpTo(game.width() - (game.width() / 3) - 2), y = 3.randomUpTo(game.height() - 3))
 	}
 
-	method perder() {
-		game.removeVisual(self)
+	override method perder() {
+		if (game.hasVisual(self)) {
+			game.removeVisual(self)
+		} else {
+			game.removeTickEvent(self.nombreEvento())
+		}
+	}
+
+	method crearTick() {
+		if (!game.hasVisual(self)) {
+			game.onTick(self.tiempoEvento(), self.nombreEvento(), { self.crearExtra()})
+		}
 	}
 
 }
 
-object vida {
+object armadura inherits Extra {
 
-	const property image = "hp.png"
-	var creado = false
-	var property position
+	const property image = "armor.png"
 
-	method crearExtra() {
-		if (!creado) {
-			position = new Position(x = 3.randomUpTo(game.width() - (game.width() / 3) - 2), y = 3.randomUpTo(game.height() - 3))
-			if (self.position() != jugador.position() and self.position() != extra.position()) {
-				game.addVisual(self)
-				creado = true
-			}
-		} else {
-			game.removeTickEvent("curar")
-			creado = false
-		}
+	override method nombreEvento() = "Armadura"
+
+	override method tiempoEvento() = 5000
+
+	override method efecto() {
+		game.say(jugador, self.nombreEvento())
+		game.removeVisual(self)
+		self.crearTick()
+		self.equiparArmadura()
 	}
 
-	method efecto() {
+	method equiparArmadura() {
+		jugador.armor(true)
+		jugador.armaduraCantidad(100)
+		jugador.image("scoutArmor.png")
+	}
+
+}
+
+object vida inherits Extra {
+
+	const property image = "hp.png"
+
+	override method nombreEvento() = "Vida"
+
+	override method tiempoEvento() = 1000
+
+	override method efecto() {
 		jugador.vidaJugador(jugador.vidaJugador() + 10)
 		if (jugador.vidaJugador() > 100) {
 			jugador.vidaJugador(100)
@@ -224,15 +233,7 @@ object vida {
 			game.say(jugador, "Vida recuperada")
 		}
 		game.removeVisual(self)
-		game.onTick(1000, "curar", { self.crearExtra()})
-	}
-
-	method danio() {
-		return 0
-	}
-
-	method perder() {
-		game.removeVisual(self)
+		self.crearTick()
 	}
 
 }
