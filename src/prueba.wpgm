@@ -10,7 +10,6 @@ program prueba {
 	game.title("prueba")
 	game.height(10)
 	game.width(15)
-		// game.addVisual(fondo1) INTENTE PONER PANTALLAS ANTES DEL JUEGO PERO NO ME SALIÓ, ESTÁN LAS IMÁGENES EN ASSETS POR SI LAS QUERES VER
 	game.boardGround("calle.png")
 	game.addVisual(primera)
 		// game.addVisualIn(jugador.vida(),game.at(3,2)) Agregar la vida y armadura a la pantalla
@@ -45,14 +44,11 @@ program prueba {
 		}
 	})
 		// keyboard.r().onPressDo({ creadorEnemigos.crear() })
-		// PARA LOS EXTRAS CONVIENE DEJAR TICKS DISTINTOS
-//	game.onTick(1000, "armadura", { extra.crearExtra()})
-//	game.onTick(1000, "curar", { vida.crearExtra() })
+
 		// COLLIDES
 		// USE UN COLLIDE SOLO Y ANDA EXACTAMENTE IGUAL QUE SI USARA UNO PARA CADA UNO
 	game.onCollideDo(jugador, { ex => jugador.agarrarObjeto(ex) })
 	game.onCollideDo(jugador, { enem => jugador.danioVida(enem.danio()) })
-		// game.onCollideDo(jugador, { vi => jugador.agarrar(vi)})
 	game.start()
 }
 //CAMBIAR LO DEL COLLIDE QUE SE HACE DAÑO CON UN FLAG, PARA QUE HAGA EL DAÑO UNA VEZ SOLA  
