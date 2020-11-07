@@ -8,7 +8,7 @@ object jugador {
 	var property position = new Position(x = 3, y = 3)
 	var direccion = quieto
 	var property armor = false
-	var property armadura = 0
+	var property armaduraCantidad = 0
 
 	// var danioTotal
 	method movimiento(direccionModificar) {
@@ -34,21 +34,22 @@ object jugador {
 	}
 
 	// FIXEE LOS CARTELES PARA QUE NO MUESTRE NI VIDA NI ARMADURA NEGATIVA
-	method danioVida(danio) {
+	method danioVida(danio, enem) {
 		if (danio != 0) {
 			if (armor) {
 				// danioTotal = (danio / 2).roundUp()
 				// vida -= danioTotal
-				armadura -= danio
-				if (armadura <= 0) {
+				armaduraCantidad -= danio
+				if (armaduraCantidad <= 0) {
 					armor = false
-					armadura = 0
+					armaduraCantidad = 0
 					self.image("scout.png")
 				}
 			} else {
 				vidaJugador -= danio
 			}
 		}
+		enem.colision()
 		self.estado()
 	}
 
@@ -56,15 +57,9 @@ object jugador {
 		ex.efecto()
 	}
 
-	method agarrarArm() {
-		armor = true
-		armadura = 100
-		self.image("scoutArmor.png")
-	}
-
 	method estado() {
 		if (!gameOver.perdio() and armor) {
-			game.say(self, "Tengo " + self.vidaJugador().toString() + " de vida restante y " + self.armadura().toString() + " de armadura")
+			game.say(self, "Tengo " + self.vidaJugador().toString() + " de vida restante y " + self.armaduraCantidad().toString() + " de armadura")
 		} else if (!gameOver.perdio()) {
 			game.say(self, "Tengo " + self.vidaJugador().toString() + " de vida restante")
 		} else {
@@ -108,13 +103,13 @@ object perdiste {
 
 	method finJuego() {
 		creadorEnemigos.perder()
-		vida.perder()
-		extra.perder()
-		jugador.movimiento(quieto)
 		game.removeVisual(jugador)
+		jugador.movimiento(quieto)
+		vida.perder()
+		armadura.perder()
 		game.removeTickEvent("mover")
 		game.addVisual(gameOver)
-	// game.sound("gameOver.mp3").play()
+//	 	game.sound("sounds/gameOver.mp3").play()
 	}
 
 }
