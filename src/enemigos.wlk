@@ -32,6 +32,7 @@ class Enemigo inherits ObjetoDeJuego {
 	}
 
 	method crear() {
+		position = self.dondeAparece()
 		game.addVisual(self)
 		game.onTick(self.tiempoEvento(), self.nombreEvento(), { self.mover()})
 	}
@@ -132,21 +133,25 @@ class Gorila inherits Enemigo {
 
 }
 
-object creadorEnemigos {
+class CreadorEnemigos {
 
-	const tigre = new Tigre()
-	const elefante = new Elefante()
-	const gorila = new Gorila()
-	const coleccionDeEnemigos = [ tigre, elefante, gorila ]
+	const coleccionDeEnemigos = [ new Tigre(), new Elefante(), new Gorila() ]
 
 	method crear() {
-		coleccionDeEnemigos.forEach({ e => e.crear()})
+		coleccionDeEnemigos.forEach({ e =>
+			if (!game.hasVisual(e)) {
+				e.crear()
+			}
+		})
 	}
 
-	method perder() {
-		coleccionDeEnemigos.forEach({ e => e.perder()})
-	}
-
+//	method perder() {
+//		coleccionDeEnemigos.forEach({ e => e.perder()})
+//	}
+//	method perder2() {
+//		coleccionDeEnemigos2.forEach({ e => e.perder()})
+//	}
+//
 }
 
 //Objetos Extras

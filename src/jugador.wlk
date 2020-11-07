@@ -1,5 +1,6 @@
 import wollok.game.*
 import enemigos.*
+import configuracion.*
 
 object jugador {
 
@@ -102,13 +103,17 @@ object quieto {
 object perdiste {
 
 	method finJuego() {
-		creadorEnemigos.perder()
-		game.removeVisual(jugador)
-		jugador.movimiento(quieto)
-		vida.perder()
-		armadura.perder()
-		game.removeTickEvent("mover")
+//		creadorEnemigos.perder()
+//		game.removeVisual(jugador)
+//		jugador.movimiento(quieto)
+//		vida.perder()
+//		armadura.perder()
+//		game.removeTickEvent("mover")
+//		creadorEnemigos.perder()
+//		creadorEnemigos.perder2()
+		game.clear()
 		game.addVisual(gameOver)
+		configuracion.teclado()
 //	 	game.sound("sounds/gameOver.mp3").play()
 	}
 
