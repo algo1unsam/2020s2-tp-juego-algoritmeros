@@ -4,31 +4,29 @@ import jugador.*
 class ObjetoDeJuego {
 
 //Los metodos abstractos entre las dos clases
-	method efecto()
 
-	method perder()
 
+//	method perder()
 	method danio()
 
 	method nombreEvento()
 
 	method tiempoEvento()
-
+	method colision()
 }
 
 class Enemigo inherits ObjetoDeJuego {
 
 	var property position = self.dondeAparece()
-	var property danio = 5
-	var property vueltas = 0
-	const vueltasLimites = 3.randomUpTo(5).roundUp()
+	var property danio = 1
+
+//	var property vueltas = 0
+//	const vueltasLimites = 3.randomUpTo(5).roundUp()
 	var property tiempoCambio = self.tiempoEvento()
 
-	override method efecto() {
-	}
 
 	method dondeAparece() {
-		return new Position(x = game.width() - 1, y = 0.randomUpTo(game.height() - 1))
+		return new Position(x = game.width() - 1, y = 3.randomUpTo(game.height() - 3))
 	}
 
 	method crear() {
@@ -45,41 +43,41 @@ class Enemigo inherits ObjetoDeJuego {
 		if (self.position().x() != 0) {
 			position = position.left(1)
 		} else {
+			jugador.puntos(jugador.puntos() + 10)
 			self.darVuelta()
 		}
 	}
 
-	method pasaElLimite() {
-		if (vueltas >= vueltasLimites) {
-			if (tiempoCambio > 200) {
-				tiempoCambio = tiempoCambio - 100
-				game.removeTickEvent(self.nombreEvento())
-				game.onTick(tiempoCambio, self.nombreEvento(), { self.mover()})
-			}
-			vueltas = 0
-		}
-	}
-
+//	method pasaElLimite() {
+//		if (vueltas >= vueltasLimites) {
+//			if (tiempoCambio > 200) {
+//				tiempoCambio = tiempoCambio - 100
+//				game.removeTickEvent(self.nombreEvento())
+//				game.onTick(tiempoCambio, self.nombreEvento(), { self.mover()})
+//			}
+//			vueltas = 0
+//		}
+//	}
 	method darVuelta() {
 		// hacer que de una vuelta y que pasando vueltasLimites se mueva mas rapido
 		position = self.dondeAparece()
-		vueltas += 1
-		self.pasaElLimite()
+//		vueltas += 1
+//		self.pasaElLimite()
 	}
 
-	override method perder() {
-		if (game.hasVisual(self)) {
-			game.removeVisual(self)
-		}
-		game.removeTickEvent(self.nombreEvento())
-		self.position(self.dondeAparece())
-	}
-
-	method colision() {
-		game.removeVisual(self)
-		game.removeTickEvent(self.nombreEvento())
+//	override method perder() {
+//		if (game.hasVisual(self)) {
+//			game.removeVisual(self)
+//		}
+//		game.removeTickEvent(self.nombreEvento())
+//		self.position(self.dondeAparece())
+//	}
+	 override method colision() {
+//		game.removeVisual(self)
+//		game.removeTickEvent(self.nombreEvento())
 		position = self.dondeAparece()
-		self.crear()
+//		self.crear()
+		jugador.estado()
 	}
 
 }
@@ -102,13 +100,13 @@ class Elefante inherits Enemigo {
 
 	override method nombreEvento() = "moverElefante"
 
-	override method tiempoEvento() = 800
+	override method tiempoEvento() = 1000
 
 	override method danio() {
-		if (jugador.armor()) {
+		if (jugador.armaduraCantidad()>0) {
 			return jugador.armaduraCantidad()
 		} else {
-			return danio * 4
+			return danio * 3
 		}
 	}
 
@@ -121,7 +119,7 @@ class Gorila inherits Enemigo {
 
 	override method nombreEvento() = "moverGorila"
 
-	override method tiempoEvento() = 600
+	override method tiempoEvento() = 800
 
 	override method danio() {
 		return danio * 2
@@ -148,29 +146,23 @@ class CreadorEnemigos {
 //	method perder() {
 //		coleccionDeEnemigos.forEach({ e => e.perder()})
 //	}
-//	method perder2() {
-//		coleccionDeEnemigos2.forEach({ e => e.perder()})
-//	}
-//
 }
 
 //Objetos Extras
-//Talvez mas objetos: algo que recupere vida y otro que de puntos
 class Extra inherits ObjetoDeJuego {
 
-	var creado = false
+//	var creado = false
 	var property position
 
 	override method danio() = 0
-
 	method crearExtra() {
-		if (!creado) {
+		if (!game.hasVisual(self)) {
 			position = self.posicion()
 			game.addVisual(self)
-			creado = true
+//			creado = true
 		} else {
 			game.removeTickEvent(self.nombreEvento())
-			creado = false
+//			creado = false
 		}
 	}
 
@@ -182,14 +174,13 @@ class Extra inherits ObjetoDeJuego {
 		return new Position(x = 3.randomUpTo(game.width() - (game.width() / 3) - 2), y = 3.randomUpTo(game.height() - 3))
 	}
 
-	override method perder() {
-		if (game.hasVisual(self)) {
-			game.removeVisual(self)
-		} else {
-			game.removeTickEvent(self.nombreEvento())
-		}
-	}
-
+//	override method perder() {
+//		if (game.hasVisual(self)) {
+//			game.removeVisual(self)
+//		} else {
+//			game.removeTickEvent(self.nombreEvento())
+//		}
+//	}
 	method crearTick() {
 		if (!game.hasVisual(self)) {
 			game.onTick(self.tiempoEvento(), self.nombreEvento(), { self.crearExtra()})
@@ -204,19 +195,23 @@ object armadura inherits Extra {
 
 	override method nombreEvento() = "Armadura"
 
-	override method tiempoEvento() = 5000
+	override method tiempoEvento() = 7000
 
-	override method efecto() {
-		game.say(jugador, self.nombreEvento())
+	override method colision() {
+//		game.say(jugador, self.nombreEvento())
 		game.removeVisual(self)
 		self.crearTick()
-		self.equiparArmadura()
+		jugador.armaduraCantidad(5)
+		barraDeArmadura.removerDePantalla()
+		jugador.image("scoutArmor.png")
+//		self.equiparArmadura()
 	}
 
 	method equiparArmadura() {
-		jugador.armor(true)
-		jugador.armaduraCantidad(100)
-		jugador.image("scoutArmor.png")
+//		jugador.armor(true)
+//		jugador.armaduraCantidad(5)
+//		barraDeArmadura.removerDePantalla()
+//		jugador.image("scoutArmor.png")
 	}
 
 }
@@ -227,18 +222,21 @@ object vida inherits Extra {
 
 	override method nombreEvento() = "Vida"
 
-	override method tiempoEvento() = 1000
+	override method tiempoEvento() = 3000
 
-	override method efecto() {
-		jugador.vidaJugador(jugador.vidaJugador() + 10)
-		if (jugador.vidaJugador() > 100) {
-			jugador.vidaJugador(100)
-			game.say(jugador, "Tengo la vida máxima")
-		} else {
-			game.say(jugador, "Vida recuperada")
-		}
+	override method colision() {
+//		jugador.vidaJugador(jugador.vidaJugador() + 10)
+//		if (jugador.vidaJugador() > 100) {
+//			jugador.vidaJugador(100)
+//			game.say(jugador, "Tengo la vida máxima")
+//		} else {
+//			game.say(jugador, "Vida recuperada")
+//		}
+//		game.say(jugador, self.nombreEvento())
 		game.removeVisual(self)
 		self.crearTick()
+		jugador.vidaJugador(5)
+		barraDeVida.removerDePantalla()
 	}
 
 }

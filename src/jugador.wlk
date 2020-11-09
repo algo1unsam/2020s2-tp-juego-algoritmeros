@@ -5,11 +5,12 @@ import configuracion.*
 object jugador {
 
 	var property image = "scout.png"
-	var property vidaJugador = 10
+	var property vidaJugador = 5
 	var property position = new Position(x = 3, y = 3)
 	var direccion = quieto
-	var property armor = false
+//	var property armor = false
 	var property armaduraCantidad = 0
+	var property puntos = 0
 
 	// var danioTotal
 	method movimiento(direccionModificar) {
@@ -17,10 +18,10 @@ object jugador {
 	}
 
 	method mover() {
-		if (self.position().y() == game.height() - 1) {
+		if (self.position().y() == game.height() - 2) {
 			direccion = quieto
 			position = position.down(1)
-		} else if (self.position().y() == 0) {
+		} else if (self.position().y() == 2) {
 			direccion = quieto
 			position = position.up(1)
 		} else if (self.position().x() == 0) {
@@ -36,33 +37,35 @@ object jugador {
 
 	// FIXEE LOS CARTELES PARA QUE NO MUESTRE NI VIDA NI ARMADURA NEGATIVA
 	method danioVida(danio, enem) {
-		if (danio != 0) {
-			if (armor) {
-				// danioTotal = (danio / 2).roundUp()
-				// vida -= danioTotal
-				armaduraCantidad -= danio
-				if (armaduraCantidad <= 0) {
-					armor = false
-					armaduraCantidad = 0
-					self.image("scout.png")
-				}
-			} else {
-				vidaJugador -= danio
-			}
+//		if (danio != 0) {
+		if (!(armaduraCantidad == 0)) {
+			armaduraCantidad -= danio
+//				}else if (armaduraCantidad <= 0) {
+//					armor = false
+//					armaduraCantidad = 0
+//					self.image("scout.png")
+//				}
+		} else {
+			vidaJugador -= danio
 		}
+		if (armaduraCantidad == 0) {
+			self.image("scout.png")
+		}
+//		}
 		enem.colision()
-		self.estado()
+//		self.estado()
 	}
 
-	method agarrarObjeto(ex) {
-		ex.efecto()
-	}
-
+//	method agarrarObjeto(ex) {
+//		ex.efecto()
+//	}
 	method estado() {
-		if (!gameOver.perdio() and armor) {
-			game.say(self, "Tengo " + self.vidaJugador().toString() + " de vida restante y " + self.armaduraCantidad().toString() + " de armadura")
-		} else if (!gameOver.perdio()) {
-			game.say(self, "Tengo " + self.vidaJugador().toString() + " de vida restante")
+		if (!gameOver.perdio()) {
+			barraDeVida.removerDePantalla()
+			barraDeArmadura.removerDePantalla()
+//			game.say(self, "Tengo " + self.vidaJugador().toString() + " de vida restante y " + self.armaduraCantidad().toString() + " de armadura")
+//		} else if (!gameOver.perdio()) {
+//			game.say(self, "Tengo " + self.vidaJugador().toString() + " de vida restante")
 		} else {
 			perdiste.finJuego()
 		}
@@ -103,17 +106,12 @@ object quieto {
 object perdiste {
 
 	method finJuego() {
-//		creadorEnemigos.perder()
-//		game.removeVisual(jugador)
-//		jugador.movimiento(quieto)
-//		vida.perder()
-//		armadura.perder()
-//		game.removeTickEvent("mover")
-//		creadorEnemigos.perder()
-//		creadorEnemigos.perder2()
 		game.clear()
 		game.addVisual(gameOver)
+		game.say(gameOver, jugador.puntos().toString())
+		jugador.puntos(0)
 		configuracion.teclado()
+	// El sonido funciona pero creo que esta muy alto 
 //	 	game.sound("sounds/gameOver.mp3").play()
 	}
 
@@ -132,6 +130,74 @@ object primera {
 
 	var property image = "primera.png"
 	var property position = new Position(x = 0, y = 0)
+
+}
+
+class VidaJugador {
+
+	var property image = "hp.png"
+	var property position
+
+	method danio() = 0
+
+}
+
+class ArmaduraJugador {
+
+	var property image = "armor.png"
+	var property position
+
+	method danio() = 0
+
+}
+
+class Barra {
+
+	const coleccionDeBarra = []
+
+	method igualarBarra()
+
+	method actualizarBarra()
+
+	method dibujarEnPantalla() {
+		self.igualarBarra()
+		coleccionDeBarra.forEach({ i => game.addVisual(i)})
+	}
+
+	method removerDePantalla() {
+		coleccionDeBarra.forEach({ i => game.removeVisual(i)})
+		self.dibujarEnPantalla()
+	}
+
+}
+
+object barraDeVida inherits Barra {
+
+	var property position = new Position(x = 0, y = 0)
+
+	override method igualarBarra() {
+		coleccionDeBarra.clear()
+		self.actualizarBarra().times({ i => coleccionDeBarra.add(new VidaJugador(position = new Position(x = i - 1, y = game.height() - 1)))})
+	}
+
+	override method actualizarBarra() {
+		return jugador.vidaJugador()
+	}
+
+}
+
+object barraDeArmadura inherits Barra {
+
+	var property position = new Position(x = 0, y = 0)
+
+	override method igualarBarra() {
+		coleccionDeBarra.clear()
+		self.actualizarBarra().times({ i => coleccionDeBarra.add(new ArmaduraJugador(position = new Position(x = 5 + i - 1, y = game.height() - 1)))})
+	}
+
+	override method actualizarBarra() {
+		return jugador.armaduraCantidad()
+	}
 
 }
 
