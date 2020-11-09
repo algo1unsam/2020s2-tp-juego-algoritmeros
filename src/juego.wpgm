@@ -3,15 +3,16 @@ import jugador.*
 import enemigos.*
 import configuracion.*
 
-program prueba {
+program juego {
 	// Agregue el archivo configuracion y puse mas grupos de enemigos
-	// TODO: cambiar los metodos de los enemigos y objetos para hacer un collide solo
+	//Hay problemas con el cambio de tiempo de los enemigos cuando dan vueltas
+	//Lo desactive por ahora, en todo caso se puede agregar mas enemigos si es muy facil
+	//
+	// TODO:
+	//Buscar graficos para la vida y la armadura. Usar los puntos para algo
 	// game.cellSize(50) El tamaño default de las celdas es de 50px
 	// NOTAS DE PROFESOR
 	// agregar un efecto cuando los enemigos chocan con el jugador
-	// NOTA
-	// hay una advertencia en jugador y enemigos - Fatal type system error: Unhandled parameter types: [null]
-	// no se que sea pero no parece afectar nada
 	// VISUALES
 	configuracion.inicio()
 		// game.addVisual(fondo1) INTENTE PONER PANTALLAS ANTES DEL JUEGO PERO NO ME SALIÓ, ESTÁN LAS IMÁGENES EN ASSETS POR SI LAS QUERES VER
@@ -24,4 +25,4 @@ program prueba {
 		// USE UN COLLIDE SOLO Y ANDA EXACTAMENTE IGUAL QUE SI USARA UNO PARA CADA UNO
 	game.start()
 }
-//CAMBIAR LO DEL COLLIDE QUE SE HACE DAÑO CON UN FLAG, PARA QUE HAGA EL DAÑO UNA VEZ SOLA    
+//CAMBIAR LO DEL COLLIDE QUE SE HACE DAÑO CON UN FLAG, PARA QUE HAGA EL DAÑO UNA VEZ SOLA      

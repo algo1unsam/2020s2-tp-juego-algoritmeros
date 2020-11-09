@@ -35,7 +35,7 @@ object configuracion {
 			grupo1.crear()
 				// Los otros grupos aparecen despues de cierto tiempo
 			game.schedule(10000, { grupo2.crear()})
-			game.schedule(15000, { grupo3.crear()})
+			game.schedule(20000, { grupo3.crear()})
 		}
 	}
 
@@ -44,7 +44,9 @@ object configuracion {
 			game.addVisual(jugador)
 			jugador.position(new Position(x = 3, y = 3))
 			jugador.movimiento(quieto)
-			jugador.vidaJugador(10)
+			jugador.vidaJugador(5)
+			barraDeVida.dibujarEnPantalla()
+			barraDeArmadura.dibujarEnPantalla()
 			self.movimientoJugador()
 			self.tickExtras()
 			self.colides()
@@ -55,15 +57,19 @@ object configuracion {
 	method movimientoJugador() {
 		// MOVIMIENTO JUGADOR
 		game.onTick(150, "mover", { jugador.mover()})
+			self.moverJugador()
+			// PARA SABER EL ESTADO DEL JUGADOR-esto es automatico cuando choca con enemigos
+			//No hace falta si esta la barra de vida
+			keyboard.q().onPressDo({ game.say(jugador,"s")})
+//		keyboard.q().onPressDo({ jugador.estado()})
+	}
+	method moverJugador(){
 		keyboard.w().onPressDo({ jugador.movimiento(arriba)})
 		keyboard.s().onPressDo({ jugador.movimiento(abajo)})
 		keyboard.a().onPressDo({ jugador.movimiento(izq)})
 		keyboard.d().onPressDo({ jugador.movimiento(der)})
 		keyboard.space().onPressDo({ jugador.movimiento(quieto)})
-			// PARA SABER EL ESTADO DEL JUGADOR-esto es automatico cuando choca con enemigos
-		keyboard.q().onPressDo({ jugador.estado()})
 	}
-
 	// EXTRAS
 	method tickExtras() {
 		game.onTick(armadura.tiempoEvento(), armadura.nombreEvento(), { armadura.crearExtra()})
@@ -71,7 +77,7 @@ object configuracion {
 	}
 
 	method colides() {
-		game.onCollideDo(jugador, { ex => jugador.agarrarObjeto(ex)})
+//		game.onCollideDo(jugador, { ex => jugador.agarrarObjeto(ex)})
 		game.onCollideDo(jugador, { enem => jugador.danioVida(enem.danio(), enem)})
 	}
 
