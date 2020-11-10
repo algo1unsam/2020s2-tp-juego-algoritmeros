@@ -4,7 +4,6 @@ import enemigos.*
 import configuracion.*
 
 program juego {
-	// game.cellSize(50) El tamaño default de las celdas es de 50px
 	configuracion.inicio()
 	configuracion.teclado()
 	game.start()

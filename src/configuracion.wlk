@@ -1,6 +1,7 @@
 import wollok.game.*
 import jugador.*
 import enemigos.*
+import graficos.*
 
 object configuracion {
 
@@ -46,6 +47,7 @@ object configuracion {
 			jugador.position(new Position(x = 3, y = 3))
 			jugador.movimiento(quieto)
 			jugador.vidaJugador(5)
+			jugador.puntos(0)
 			barraDeVida.dibujarEnPantalla()
 			barraDeArmadura.dibujarEnPantalla()
 			self.movimientoJugador()

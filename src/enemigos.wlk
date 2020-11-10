@@ -1,5 +1,6 @@
 import wollok.game.*
 import jugador.*
+import graficos.*
 
 class ObjetoDeJuego {
 
