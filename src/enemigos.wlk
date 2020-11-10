@@ -4,7 +4,6 @@ import jugador.*
 class ObjetoDeJuego {
 
 //Los metodos abstractos entre las dos clases
-//	method perder()
 	method danio()
 
 	method nombreEvento()
@@ -19,8 +18,6 @@ class Enemigo inherits ObjetoDeJuego {
 
 	var property position = self.dondeAparece()
 	var property danio = 1
-//	var property vueltas = 0
-//	const vueltasLimites = 3.randomUpTo(5).roundUp()
 	var property tiempoCambio = self.tiempoEvento()
 
 	method dondeAparece() {
@@ -46,35 +43,12 @@ class Enemigo inherits ObjetoDeJuego {
 		}
 	}
 
-//	method pasaElLimite() {
-//		if (vueltas >= vueltasLimites) {
-//			if (tiempoCambio > 200) {
-//				tiempoCambio = tiempoCambio - 100
-//				game.removeTickEvent(self.nombreEvento())
-//				game.onTick(tiempoCambio, self.nombreEvento(), { self.mover()})
-//			}
-//			vueltas = 0
-//		}
-//	}
 	method darVuelta() {
-		// hacer que de una vuelta y que pasando vueltasLimites se mueva mas rapido
 		position = self.dondeAparece()
-//		vueltas += 1
-//		self.pasaElLimite()
 	}
 
-//	override method perder() {
-//		if (game.hasVisual(self)) {
-//			game.removeVisual(self)
-//		}
-//		game.removeTickEvent(self.nombreEvento())
-//		self.position(self.dondeAparece())
-//	}
 	override method colision() {
-//		game.removeVisual(self)
-//		game.removeTickEvent(self.nombreEvento())
 		position = self.dondeAparece()
-//		self.crear()
 		jugador.estado()
 	}
 
@@ -141,15 +115,11 @@ class CreadorEnemigos {
 		})
 	}
 
-//	method perder() {
-//		coleccionDeEnemigos.forEach({ e => e.perder()})
-//	}
 }
 
 //Objetos Extras
 class Extra inherits ObjetoDeJuego {
 
-//	var creado = false
 	var property position
 
 	override method danio() = 0
@@ -158,10 +128,8 @@ class Extra inherits ObjetoDeJuego {
 		if (!game.hasVisual(self)) {
 			position = self.posicion()
 			game.addVisual(self)
-//			creado = true
 		} else {
 			game.removeTickEvent(self.nombreEvento())
-//			creado = false
 		}
 	}
 
@@ -173,13 +141,6 @@ class Extra inherits ObjetoDeJuego {
 		return new Position(x = 3.randomUpTo(game.width() - (game.width() / 3) - 2), y = 3.randomUpTo(game.height() - 3))
 	}
 
-//	override method perder() {
-//		if (game.hasVisual(self)) {
-//			game.removeVisual(self)
-//		} else {
-//			game.removeTickEvent(self.nombreEvento())
-//		}
-//	}
 	method crearTick() {
 		if (!game.hasVisual(self)) {
 			game.onTick(self.tiempoEvento(), self.nombreEvento(), { self.crearExtra()})
@@ -197,20 +158,11 @@ object armadura inherits Extra {
 	override method tiempoEvento() = 7000
 
 	override method colision() {
-//		game.say(jugador, self.nombreEvento())
 		game.removeVisual(self)
 		self.crearTick()
 		jugador.armaduraCantidad(5)
 		barraDeArmadura.removerDePantalla()
 		jugador.image("scoutArmor.png")
-//		self.equiparArmadura()
-	}
-
-	method equiparArmadura() {
-//		jugador.armor(true)
-//		jugador.armaduraCantidad+ (5)
-//		barraDeArmadura.removerDePantalla()
-//		jugador.image("scoutArmor.png")
 	}
 
 }
@@ -224,14 +176,6 @@ object vida inherits Extra {
 	override method tiempoEvento() = 3000
 
 	override method colision() {
-//		jugador.vidaJugador(jugador.vidaJugador() + 10)
-//		if (jugador.vidaJugador() > 100) {
-//			jugador.vidaJugador(100)
-//			game.say(jugador, "Tengo la vida máxima")
-//		} else {
-//			game.say(jugador, "Vida recuperada")
-//		}
-//		game.say(jugador, self.nombreEvento())
 		game.removeVisual(self)
 		self.crearTick()
 		jugador.vidaJugador(5)
@@ -240,12 +184,13 @@ object vida inherits Extra {
 
 }
 
+// Realiza la operación para la puntuación y lo guarda en una variable del jugador
 object score {
 
 	method calcularPuntos() = (jugador.vidaJugador() + jugador.armaduraCantidad()) * 100
 
 	method ganarPuntos() {
-		jugador.puntos(jugador.puntos()+self.calcularPuntos())
+		jugador.puntos(jugador.puntos() + self.calcularPuntos())
 	}
 
 	method puntuacionTotal() = jugador.puntos()

@@ -8,11 +8,9 @@ object jugador {
 	var property vidaJugador = 5
 	var property position = new Position(x = 3, y = 3)
 	var direccion = quieto
-//	var property armor = false
 	var property armaduraCantidad = 0
 	var property puntos = 0
 
-	// var danioTotal
 	method movimiento(direccionModificar) {
 		direccion = direccionModificar
 	}
@@ -35,37 +33,22 @@ object jugador {
 		}
 	}
 
-	// FIXEE LOS CARTELES PARA QUE NO MUESTRE NI VIDA NI ARMADURA NEGATIVA
 	method danioVida(danio, enem) {
-//		if (danio != 0) {
 		if (!(armaduraCantidad == 0)) {
 			armaduraCantidad -= danio
-//				}else if (armaduraCantidad <= 0) {
-//					armor = false
-//					armaduraCantidad = 0
-//					self.image("scout.png")
-//				}
 		} else {
 			vidaJugador -= danio
 		}
 		if (armaduraCantidad == 0) {
 			self.image("scout.png")
 		}
-//		}
 		enem.colision()
-//		self.estado()
 	}
 
-//	method agarrarObjeto(ex) {
-//		ex.efecto()
-//	}
 	method estado() {
 		if (!gameOver.perdio()) {
 			barraDeVida.removerDePantalla()
 			barraDeArmadura.removerDePantalla()
-//			game.say(self, "Tengo " + self.vidaJugador().toString() + " de vida restante y " + self.armaduraCantidad().toString() + " de armadura")
-//		} else if (!gameOver.perdio()) {
-//			game.say(self, "Tengo " + self.vidaJugador().toString() + " de vida restante")
 		} else {
 			perdiste.finJuego()
 		}
@@ -108,13 +91,10 @@ object perdiste {
 	method finJuego() {
 		game.clear()
 		game.addVisual(gameOver)
-			// jugador.position(new Position(x = 7, y = 0))
 		game.addVisual(jugadorScoreCartel)
-		game.say(jugadorScoreCartel,"Obtuviste " + jugador.puntos().toString() + " puntos")
+		game.say(jugadorScoreCartel, "Obtuviste " + jugador.puntos().toString() + " puntos")
 		jugador.puntos(0)
 		configuracion.teclado()
-	// El sonido funciona pero creo que esta muy alto 
-//	 	game.sound("sounds/gameOver.mp3").play()
 	}
 
 }

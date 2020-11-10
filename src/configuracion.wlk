@@ -28,7 +28,6 @@ object configuracion {
 	method primeraPantalla() {
 		if (game.hasVisual(primera)) {
 			game.removeVisual(primera)
-			//game.removeVisual(jugadorScoreCartel)
 			self.crearJugador()
 				// Grupos de enemigos, pueden ser mas si necesario
 			const grupo1 = new CreadorEnemigos()
@@ -57,13 +56,8 @@ object configuracion {
 
 	// CONTROLES
 	method movimientoJugador() {
-		// MOVIMIENTO JUGADOR
 		game.onTick(150, "mover", { jugador.mover()})
 		self.moverJugador()
-			// PARA SABER EL ESTADO DEL JUGADOR-esto es automatico cuando choca con enemigos
-			// No hace falta si esta la barra de vida
-		keyboard.q().onPressDo({ game.say(jugador, "s")})
-//		keyboard.q().onPressDo({ jugador.estado()})
 	}
 
 	method moverJugador() {
@@ -82,7 +76,6 @@ object configuracion {
 	}
 
 	method colides() {
-//		game.onCollideDo(jugador, { ex => jugador.agarrarObjeto(ex)})
 		game.onCollideDo(jugador, { enem => jugador.danioVida(enem.danio(), enem)})
 	}
 
