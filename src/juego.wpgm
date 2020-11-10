@@ -1,0 +1,10 @@
+import wollok.game.*
+import jugador.*
+import enemigos.*
+import configuracion.*
+
+program juego {
+	configuracion.inicio()
+	configuracion.teclado()
+	game.start()
+}
