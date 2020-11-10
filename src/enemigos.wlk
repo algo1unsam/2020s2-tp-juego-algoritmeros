@@ -4,26 +4,24 @@ import jugador.*
 class ObjetoDeJuego {
 
 //Los metodos abstractos entre las dos clases
-
-
 //	method perder()
 	method danio()
 
 	method nombreEvento()
 
 	method tiempoEvento()
+
 	method colision()
+
 }
 
 class Enemigo inherits ObjetoDeJuego {
 
 	var property position = self.dondeAparece()
 	var property danio = 1
-
 //	var property vueltas = 0
 //	const vueltasLimites = 3.randomUpTo(5).roundUp()
 	var property tiempoCambio = self.tiempoEvento()
-
 
 	method dondeAparece() {
 		return new Position(x = game.width() - 1, y = 3.randomUpTo(game.height() - 3))
@@ -72,7 +70,7 @@ class Enemigo inherits ObjetoDeJuego {
 //		game.removeTickEvent(self.nombreEvento())
 //		self.position(self.dondeAparece())
 //	}
-	 override method colision() {
+	override method colision() {
 //		game.removeVisual(self)
 //		game.removeTickEvent(self.nombreEvento())
 		position = self.dondeAparece()
@@ -103,7 +101,7 @@ class Elefante inherits Enemigo {
 	override method tiempoEvento() = 1000
 
 	override method danio() {
-		if (jugador.armaduraCantidad()>0) {
+		if (jugador.armaduraCantidad() > 0) {
 			return jugador.armaduraCantidad()
 		} else {
 			return danio * 3
@@ -155,6 +153,7 @@ class Extra inherits ObjetoDeJuego {
 	var property position
 
 	override method danio() = 0
+
 	method crearExtra() {
 		if (!game.hasVisual(self)) {
 			position = self.posicion()
@@ -209,7 +208,7 @@ object armadura inherits Extra {
 
 	method equiparArmadura() {
 //		jugador.armor(true)
-//		jugador.armaduraCantidad(5)
+//		jugador.armaduraCantidad+ (5)
 //		barraDeArmadura.removerDePantalla()
 //		jugador.image("scoutArmor.png")
 	}
@@ -238,6 +237,18 @@ object vida inherits Extra {
 		jugador.vidaJugador(5)
 		barraDeVida.removerDePantalla()
 	}
+
+}
+
+object score {
+
+	method calcularPuntos() = (jugador.vidaJugador() + jugador.armaduraCantidad()) * 100
+
+	method ganarPuntos() {
+		jugador.puntos(jugador.puntos()+self.calcularPuntos())
+	}
+
+	method puntuacionTotal() = jugador.puntos()
 
 }
 

@@ -19,6 +19,7 @@ object configuracion {
 	method manejarPantalla() {
 		self.primeraPantalla()
 		if (game.hasVisual(gameOver)) {
+			game.removeVisual(jugadorScoreCartel)
 			game.removeVisual(gameOver)
 			game.addVisual(primera)
 		}
@@ -27,6 +28,7 @@ object configuracion {
 	method primeraPantalla() {
 		if (game.hasVisual(primera)) {
 			game.removeVisual(primera)
+			//game.removeVisual(jugadorScoreCartel)
 			self.crearJugador()
 				// Grupos de enemigos, pueden ser mas si necesario
 			const grupo1 = new CreadorEnemigos()
@@ -57,23 +59,26 @@ object configuracion {
 	method movimientoJugador() {
 		// MOVIMIENTO JUGADOR
 		game.onTick(150, "mover", { jugador.mover()})
-			self.moverJugador()
+		self.moverJugador()
 			// PARA SABER EL ESTADO DEL JUGADOR-esto es automatico cuando choca con enemigos
-			//No hace falta si esta la barra de vida
-			keyboard.q().onPressDo({ game.say(jugador,"s")})
+			// No hace falta si esta la barra de vida
+		keyboard.q().onPressDo({ game.say(jugador, "s")})
 //		keyboard.q().onPressDo({ jugador.estado()})
 	}
-	method moverJugador(){
+
+	method moverJugador() {
 		keyboard.w().onPressDo({ jugador.movimiento(arriba)})
 		keyboard.s().onPressDo({ jugador.movimiento(abajo)})
 		keyboard.a().onPressDo({ jugador.movimiento(izq)})
 		keyboard.d().onPressDo({ jugador.movimiento(der)})
 		keyboard.space().onPressDo({ jugador.movimiento(quieto)})
 	}
+
 	// EXTRAS
 	method tickExtras() {
 		game.onTick(armadura.tiempoEvento(), armadura.nombreEvento(), { armadura.crearExtra()})
 		game.onTick(vida.tiempoEvento(), vida.nombreEvento(), { vida.crearExtra()})
+		game.onTick(10000, "sumarPuntos", { score.ganarPuntos()})
 	}
 
 	method colides() {

@@ -108,7 +108,9 @@ object perdiste {
 	method finJuego() {
 		game.clear()
 		game.addVisual(gameOver)
-		game.say(gameOver, jugador.puntos().toString())
+			// jugador.position(new Position(x = 7, y = 0))
+		game.addVisual(jugadorScoreCartel)
+		game.say(jugadorScoreCartel,"Obtuviste " + jugador.puntos().toString() + " puntos")
 		jugador.puntos(0)
 		configuracion.teclado()
 	// El sonido funciona pero creo que esta muy alto 
@@ -192,7 +194,7 @@ object barraDeArmadura inherits Barra {
 
 	override method igualarBarra() {
 		coleccionDeBarra.clear()
-		self.actualizarBarra().times({ i => coleccionDeBarra.add(new ArmaduraJugador(position = new Position(x = 5 + i - 1, y = game.height() - 1)))})
+		self.actualizarBarra().times({ i => coleccionDeBarra.add(new ArmaduraJugador(position = new Position(x = 10 + i - 1, y = game.height() - 1)))})
 	}
 
 	override method actualizarBarra() {
@@ -201,11 +203,10 @@ object barraDeArmadura inherits Barra {
 
 }
 
-//object fondo1 {
-// var property image = "primera.png"
-// var property position = new Position(x = 0, y = 0)
-//}
-//object fondo2 {
-// var property image = "segunda.png"
-// var property position = new Position(x = 0, y = 0)
-//}
+object jugadorScoreCartel {
+
+	var property position = new Position(x = 6, y = 0)
+	var property image = "scout.png"
+
+}
+

@@ -4,25 +4,8 @@ import enemigos.*
 import configuracion.*
 
 program juego {
-	// Agregue el archivo configuracion y puse mas grupos de enemigos
-	//Hay problemas con el cambio de tiempo de los enemigos cuando dan vueltas
-	//Lo desactive por ahora, en todo caso se puede agregar mas enemigos si es muy facil
-	//
-	// TODO:
-	//Buscar graficos para la vida y la armadura. Usar los puntos para algo
 	// game.cellSize(50) El tamaño default de las celdas es de 50px
-	// NOTAS DE PROFESOR
-	// agregar un efecto cuando los enemigos chocan con el jugador
-	// VISUALES
 	configuracion.inicio()
-		// game.addVisual(fondo1) INTENTE PONER PANTALLAS ANTES DEL JUEGO PERO NO ME SALIÓ, ESTÁN LAS IMÁGENES EN ASSETS POR SI LAS QUERES VER
-		// game.addVisualIn(jugador.vida(),game.at(3,2)) Agregar la vida y armadura a la pantalla
 	configuracion.teclado()
-		// PARA LOS EXTRAS CONVIENE DEJAR TICKS DISTINTOS
-//	game.onTick(1000, "armadura", { extra.crearExtra()})
-//	game.onTick(1000, "curar", { vida.crearExtra() })
-		// COLLIDES
-		// USE UN COLLIDE SOLO Y ANDA EXACTAMENTE IGUAL QUE SI USARA UNO PARA CADA UNO
 	game.start()
 }
-//CAMBIAR LO DEL COLLIDE QUE SE HACE DAÑO CON UN FLAG, PARA QUE HAGA EL DAÑO UNA VEZ SOLA      
