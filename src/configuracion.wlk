@@ -23,6 +23,7 @@ object configuracion {
 			game.removeVisual(jugadorScoreCartel)
 			game.removeVisual(gameOver)
 			game.addVisual(primera)
+			game.removeTickEvent("Mensaje")
 		}
 	}
 

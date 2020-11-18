@@ -94,6 +94,7 @@ object perdiste {
 		game.addVisual(gameOver)
 		game.addVisual(jugadorScoreCartel)
 		self.repetirMensaje()
+		game.onTick(4000, "Mensaje", { self.repetirMensaje()})
 		configuracion.teclado()
 	}
 
