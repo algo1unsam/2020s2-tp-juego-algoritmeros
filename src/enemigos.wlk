@@ -2,20 +2,7 @@ import wollok.game.*
 import jugador.*
 import graficos.*
 
-class ObjetoDeJuego {
-
-//Los metodos abstractos entre las dos clases
-	method danio()
-
-	method nombreEvento()
-
-	method tiempoEvento()
-
-	method colision()
-
-}
-
-class Enemigo inherits ObjetoDeJuego {
+class Enemigo {
 
 	var property position = self.dondeAparece()
 	var property danio = 1
@@ -48,10 +35,14 @@ class Enemigo inherits ObjetoDeJuego {
 		position = self.dondeAparece()
 	}
 
-	override method colision() {
+	method colision() {
 		position = self.dondeAparece()
 		jugador.estado()
 	}
+
+	method nombreEvento()
+
+	method tiempoEvento()
 
 }
 
@@ -79,7 +70,7 @@ class Elefante inherits Enemigo {
 		if (jugador.armaduraCantidad() > 0) {
 			return jugador.armaduraCantidad()
 		} else {
-			return danio * 3
+			return super() * 3
 		}
 	}
 
@@ -95,7 +86,7 @@ class Gorila inherits Enemigo {
 	override method tiempoEvento() = 800
 
 	override method danio() {
-		return danio * 2
+		return super() * 2
 	}
 
 	override method dondeAparece() {
@@ -119,11 +110,11 @@ class CreadorEnemigos {
 }
 
 //Objetos Extras
-class Extra inherits ObjetoDeJuego {
+class Extra {
 
 	var property position
 
-	override method danio() = 0
+	method danio() = 0
 
 	method crearExtra() {
 		if (!game.hasVisual(self)) {
@@ -148,6 +139,18 @@ class Extra inherits ObjetoDeJuego {
 		}
 	}
 
+	method colision() {
+		game.removeVisual(self)
+		self.crearTick()
+		self.efectoDeColision()
+	}
+
+	method nombreEvento()
+
+	method tiempoEvento()
+
+	method efectoDeColision()
+
 }
 
 object armadura inherits Extra {
@@ -158,9 +161,7 @@ object armadura inherits Extra {
 
 	override method tiempoEvento() = 7000
 
-	override method colision() {
-		game.removeVisual(self)
-		self.crearTick()
+	override method efectoDeColision() {
 		jugador.armaduraCantidad(5)
 		barraDeArmadura.removerDePantalla()
 		jugador.image("scoutArmor.png")
@@ -176,9 +177,7 @@ object vida inherits Extra {
 
 	override method tiempoEvento() = 3000
 
-	override method colision() {
-		game.removeVisual(self)
-		self.crearTick()
+	override method efectoDeColision() {
 		jugador.vidaJugador(5)
 		barraDeVida.removerDePantalla()
 	}
